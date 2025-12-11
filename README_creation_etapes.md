@@ -1,11 +1,28 @@
 
 # Sommaire
-- [Step 1](#step-1)
-- [Etape 1 — Activer et configurer Firebase Authentification](#etape-1-activer-et-configurer-firebase-authentification)
-- [Etape 2 — Activer et configurer Cloud Functions for Firebase](#etape-2-activer-et-configurer-cloud-functions-for-firebase)
-- [Etape 3 — Configurer Firebase Hosting](#etape-3-configurer-firebase-hosting)
+- [Step 0 Créer une application angular](#step-0-créer-une-application-angular)
+- [Step 1](#step-1])
+  - [Etape 1 — Activer et configurer Firebase Authentification](#etape-1-activer-et-configurer-firebase-authentification)
+  - [Etape 2 — Activer et configurer Cloud Functions for Firebase](#etape-2-activer-et-configurer-cloud-functions-for-firebase)
+  - [Etape 3 — Configurer Firebase Hosting](#etape-3-configurer-firebase-hosting)
 - [Step 2](#step-2-set-up-firebase-products-using-the-console-or-cli)
+
+# Step 0
+
+## Step 0 Créer une application angular
+-  Créer une application angular normale (
+    - npm install -g @angular/cli@20 
+    - ng new mon-app --style=scss --routing --strict
+    - Après création : installer dépendances et démarrer (ng serve)
+- Ajouter Angular Material (UI)
+    - ng add @angular/material
+- Ajouter Firebase
+   - Installer firebase-tools (global ou via npx) : npm install -g firebase-tools firebase login
+   - Initialiser Firebase dans le projet : firebase init // Sélectionne Hosting, Functions (si tu veux functions), Firestore, Authentication selon besoin. // Pour Hosting indique dist/mon-app comme dossier public (ou laisse l'assistant configurer).
+   - Installer SDK Firebase dans l’app Angular (sans @angular/fire si incompatibilité de version): npm install firebase
+
 # Step 1
+
 ## Etape 1 Activer et configurer Firebase Authentification
 
  - Accédez à la console Firebase : Ouvrez votre navigateur et allez sur console.firebase.google.com  . Assurez-vous d'être connecté au bon projet ( ia4m2-18361 ).
@@ -81,7 +98,9 @@ firebase experiments:enable webframeworks
   - Une fois ces étapes effectuées, votre Firebase Hosting est prêt à servir votre application Angular et à s'intégrer avec vos Cloud Functions !
 
 
+## Etape 3 Configurer Gemini
 
+## Etape 4 Monétiser 
 
 ## Step 2 Set up Firebase products using the Console or CLI
 

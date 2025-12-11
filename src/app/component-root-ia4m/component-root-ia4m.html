@@ -1,0 +1,96 @@
+<div class="ia4mail-root">
+  <header class="top-banner">
+    <div class="top-banner__inner">
+      <div class="brand">ia4mail</div>
+      <nav class="top-nav">
+        <a class="top-nav__link" href="#">Aide</a>
+        <a class="top-nav__link button button--outline" href="#">Se connecter</a>
+        <app-bg-auth></app-bg-auth>
+      </nav>
+    </div>
+  </header>
+
+  <div class="app" id="inbox">
+    <aside class="sidebar">
+      <button class="compose">Nouveau message</button>
+
+      <ul class="folders" aria-label="Dossiers">
+        <li class="folder active">Boîte de réception <span class="count">3</span></li>
+        <li class="folder">Important</li>
+        <li class="folder">Envoyés</li>
+        <li class="folder">Brouillons</li>
+        <li class="folder">Spam</li>
+      </ul>
+
+      <div class="labels">
+        <h4>Libellés</h4>
+        <ul>
+          <li><span class="label-dot label-dot--blue"></span> Projets</li>
+          <li><span class="label-dot label-dot--green"></span> Perso</li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="inbox">
+      <div class="inbox__header">
+        <div class="search">
+          <input type="search" placeholder="Rechercher dans les emails" aria-label="Rechercher">
+        </div>
+        <div class="inbox-actions">
+          <button class="icon-btn" type="button" title="Menu">☰</button>
+          <button class="icon-btn" type="button" title="Paramètres">⚙</button>
+        </div>
+      </div>
+
+      <ul class="email-list" role="list">
+        <li
+          class="email-item"
+          *ngFor="let email of emails"
+          [class.unread]="!email.read"
+          (click)="select(email)"
+          role="listitem"
+          [attr.aria-selected]="selectedEmail === email"
+        >
+          <div class="email-left">
+            <div class="avatar">{{ email.fromInitial }}</div>
+          </div>
+          <div class="email-body">
+            <div class="email-top">
+              <span class="sender">{{ email.from }}</span>
+              <span class="time">{{ email.time }}</span>
+            </div>
+            <div class="email-subject">{{ email.subject }}</div>
+            <div class="email-snippet">{{ email.snippet }}</div>
+          </div>
+        </li>
+      </ul>
+    </main>
+
+    <!-- utilisation de "as email" pour lever l'erreur TS2531 -->
+    <aside class="preview" *ngIf="selectedEmail as email; else emptyPreview">
+      <div class="preview__header">
+        <h3>{{ email.subject }}</h3>
+        <div class="preview-meta">
+          <span class="sender">{{ email.from }}</span>
+          <span class="time">{{ email.time }}</span>
+        </div>
+      </div>
+      <div class="preview__content">
+        <p>{{ email.body }}</p>
+      </div>
+    </aside>
+
+    <ng-template #emptyPreview>
+      <aside class="preview">
+        <div class="preview__header">
+          <h3>Aperçu</h3>
+        </div>
+        <div class="preview__content">
+          <p>Sélectionnez un message pour voir son contenu ici. Cette zone peut afficher un aperçu, les pièces jointes et des actions rapides.</p>
+        </div>
+      </aside>
+    </ng-template>
+  </div>
+
+  <button class="fab" aria-label="Nouveau message">+</button>
+</div>
