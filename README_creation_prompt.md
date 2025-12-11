@@ -7,7 +7,7 @@ Important — contraintes et recommandations :
 - Ne pas inclure ou reproduire d'éléments propriétaires (logo Gmail, assets Google). Le design doit être original mais s'inspirer de la disposition boîte mail (bandeau supérieur, sidebar, liste d'emails, aperçu).
 - L'architecture doit séparer frontend (Angular) et backend (Cloud Functions). Toutes les requêtes vers Gemini doivent être effectuées par la Function.
 - Pour éviter des conflits de peerDependencies avec @angular/fire, n'utilise PAS @angular/fire. Utilise le SDK officiel firebase (firebase/app, firebase/auth, firebase/firestore, firebase/storage) et fournis des providers Angular pour l'initialisation.
-- Le projet cible Angular version: {{angularVersion}} (remplace par "20" si tu veux une compatibilité stable). Indique la version majeure dans le package.json.
+- Le projet cible Angular version: angularVersion=20. Indique la version majeure dans le package.json.
 - Fournis un ensemble minimal mais complet de fichiers: package.json (app & functions), angular.json, tsconfig, src/app with components/services, styles, environments, functions/src with code TypeScript pour appeler Gemini (Vertex AI) en toute sécurité via google-auth-library, firebase.json, .gitattributes, README.md.
 - L'output doit être strictement au format JSON (ou un format structuré) contenant un tableau "files" : [{ "path": "<path>", "content": "<file content>" }]. Ne rien envoyer hors de ce JSON. (Si l'interface ne supporte pas JSON, renvoie une liste de fichiers en markdown avec un header indiquant le chemin, puis bloc de code contenant le contenu.)
 - Inclure des placeholders clairement identifiables pour toutes les valeurs sensibles (FIREBASE_CONFIG, PROJECT_ID, MODEL, LOCATION). Ne pas inclure de vraies clés.
@@ -17,6 +17,7 @@ Fonctionnalités attendues (minimum viable feature set)
 1) Auth:
   - Firebase Authentication (Email/Password et Google sign-in).
   - Frontend login/logout + guard pour routes privées.
+  - Appel à gemini , pour chaque mail, pour recuperer un ou plusieurs labels parmi une liste: banque, perso, offreEmploi, newsletter,contact, administratif, abonnements
 
 2) UI/UX:
   - Bandeau supérieur distinctif avec branding "ia4mail".
@@ -89,20 +90,3 @@ Réponse attendue :
 
 Fin du prompt.
 
-Exemple d’appel HTTP à ta Cloud Function (payload JSON) :
-POST /generate (ou à ta Function)
-Content-Type: application/json
-Body:
-{
-  "prompt": "<colle le prompt ci‑dessus>",
-  "angularVersion": "20",
-  "projectId": "mon-projet-id",
-  "location": "us-central1",
-  "model": "models/text-bison-001"
-}
-
-Notes / recommandations pour toi
-- Avant d'exécuter, remplace {{angularVersion}} si tu veux forcer Angular 20; sinon demande au modèle d'utiliser "la dernière version stable compatible".
-- Pour éviter payloads massifs et erreurs token-size, appelle Gemini en plusieurs étapes : demander d'abord l'arborescence + README, puis demander fichiers par groupes (frontend, backend, configs).
-- Si ton exécution via Firebase Function a des limites de temps/tokens, configure la Function pour streamer ou pour générer en plusieurs appels.
-```

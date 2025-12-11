@@ -1,3 +1,11 @@
+
+# Sommaire
+- [Step 1](#step-1)
+- [Etape 1 — Activer et configurer Firebase Authentification](#etape-1-activer-et-configurer-firebase-authentification)
+- [Etape 2 — Activer et configurer Cloud Functions for Firebase](#etape-2-activer-et-configurer-cloud-functions-for-firebase)
+- [Etape 3 — Configurer Firebase Hosting](#etape-3-configurer-firebase-hosting)
+- [Step 2](#step-2-set-up-firebase-products-using-the-console-or-cli)
+# Step 1
 ## Etape 1 Activer et configurer Firebase Authentification
 
  - Accédez à la console Firebase : Ouvrez votre navigateur et allez sur console.firebase.google.com  . Assurez-vous d'être connecté au bon projet ( ia4m2-18361 ).
@@ -8,7 +16,7 @@
     - Google : Cliquez sur "Google", activez-le, choisissez l'adresse e-mail d'assistance que vous souhaitez afficher pour vos utilisateurs et cliquez sur "Save". Vous devrez peut-être aussi configurer l'écran de consentement OAuth dans votre console Google Cloud si ce n'est pas déjà fait.
  - Une fois ces étapes réalisées, Firebase Authentication est activé et configuré dans votre projet pour ces méthodes de connexion.
 
-## Etape 2  Activer et configurer Cloud Functions for Firebase
+## Etape 2 Activer et configurer Cloud Functions for Firebase
   - Accédez à la console Firebase : Comme pour l'authentification, rendez-vous sur console.firebase.google.com  et assurez-vous d'être dans votre projet ( ia4m2-18361 ).
   - Naviguez vers Functions : Dans le menu de gauche, sous la section "Build" (Construire), cliquez sur "Functions".
   - Démarrer (si nécessaire) : Si c'est votre première fois, la console vous proposera peut-être de "Get started" (Démarrer) ou de "Upgrade your project" (Mettre à niveau votre projet) si vous êtes sur le plan Spark et n'avez pas encore activé les fonctions payantes. Cloud Functions nécessite le plan "Blaze" (paiement à l'usage) pour la plupart des fonctionnalités, même si l'utilisation minimale peut être "no-cost".
@@ -28,7 +36,7 @@
 
 Ces étapes vous permettront de préparer votre environnement pour développer et déployer vos Cloud Functions.
 
-## Etape 3 Configurer Firebase Hosting 
+## Etape 3 Configurer Firebase Hosting
 Configurer Firebase Hosting pour votre application Angular est crucial pour sa performance et sa livraison rapide. Voici comment procéder :
   - Prérequis : Assurez-vous d'avoir la Firebase CLI installée et que vous êtes connecté ( firebase login ).
   - Initialisez Firebase Hosting :
@@ -75,7 +83,8 @@ firebase experiments:enable webframeworks
 
 
 
-## Step 2: Set up Firebase products using the Console or CLI
+## Step 2 Set up Firebase products using the Console or CLI
+
  Set up Firebase products using the Console or CLI" concerne l'activation et la configuration initiale de chaque produit que nous avons choisi. Voici un récapitulatif des orientations générales que nous avons déjà couvertes :
   - Firebase Authentication : Pour l'activer, vous devez vous rendre dans la Console Firebase , naviguer vers la section "Authentication" et y activer les méthodes de connexion souhaitées (Email/Password et Google Sign-in).
   - Cloud Functions for Firebase : L'initialisation principale se fait via la Firebase CLI . Vous utiliserez la commande firebase init functions dans votre terminal pour créer la structure de base de vos fonctions. N'oubliez pas l'étape cruciale dans la Console Google Cloud pour accorder les rôles IAM nécessaires à votre compte de service afin qu'il puisse interagir avec l'API Vertex AI.
