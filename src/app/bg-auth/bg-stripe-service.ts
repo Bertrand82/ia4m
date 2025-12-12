@@ -1,10 +1,203 @@
 import { Injectable } from '@angular/core';
+import { baseUrl0 } from './bg-auth-environment';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
+
+
 export class BgStripeService {
-  
+
+  stripeCustomer!: StripeCustomer | null;
+  stripeSession!: StripeSession | null;
+  stripeSubscription !: Subscription | null;
+  stripeSubscriptionTimestamp!: number | null;
+
+  constructor(private http: HttpClient) {
+    this.stripeCustomer = this.getStripeCustomerFromLocal();
+    this.stripeSession = this.getStripeSessionFromLocal();
+    this.stripeSubscription = this.getStripeSubscriptionFromLocal();
+    this.stripeSubscriptionTimestamp = this.getStripeSubscriptionTimestampFromLocal();
+  }
+  private eMail: string | null = null;
+  searchStripeCustomerOrCreate0(mail:string|null){
+    this.eMail = mail;
+    this.searchStripeCustomerOrCreate();
+  }
+  searchStripeCustomerOrCreate( aCallBack?: (stripeCustomerId: string) => void) {
+    const baseUrl =
+      `${baseUrl0}/bgstripesearchclientsbybguseridorcreateclient2`;
+    const params = new URLSearchParams({
+      email: this.eMail ?? '',
+    });
+    this.http.get<any>(`${baseUrl}?${params.toString()}`, {}).subscribe({
+      next: (res) => {
+        console.log('BG Response from bgstripesearchclientsbybguseridorcreateclient:', res);
+        this.stripeCustomer = res;
+        this.saveStripeCustomerInLocal();
+        const stripeCustomerId = this.stripeCustomer?.id;
+        if (aCallBack) {
+          console.log('BG aCallBack :', aCallBack);
+          console.log('BG aCallBack getStripeCustomerId :', this.stripeCustomer?.id);
+
+          if (stripeCustomerId) {
+            aCallBack(stripeCustomerId);
+          } else {
+            console.error('BG Erreur: pas de stripeCustomerId après création ou recherche du client');
+          }
+
+        } else {
+          console.log('BG pas de aCallBack fourni');
+          if (stripeCustomerId) {
+            this.fetchStripeSessionsByBgUserId2(stripeCustomerId);  // Call fetchStripeSessionsByBgUserId2 directly
+          }
+        }
+      },
+      error: (err) => {
+        console.error('Erreur from bgstripesearchclientsbybguseridorcreateclient:', err);
+      },
+    });
+  }
+  fetchStripeSessionsByBgUserId1() {
+    const stripeCustomerId = this.stripeCustomer?.id;
+    if (stripeCustomerId) {
+      this.fetchStripeSessionsByBgUserId2(stripeCustomerId);
+    }
+  }
+
+  fetchStripeSessionsByBgUserId2(stripeCustomerId: string) {
+
+    console.log('searchStripeSessionsByBgUserId2 called with:', stripeCustomerId);
+    const baseUrl =
+      `${baseUrl0}/bgstripegetsessionsbyclient2`;
+    const params = new URLSearchParams({
+      clientIdStripe: stripeCustomerId,
+    });
+    this.http.get<any>(`${baseUrl}?${params.toString()}`, {}).subscribe({
+      next: (res) => {
+        console.log('Response from bgstripegetsessionsbyclient2:', res);
+        const listSessions: Array<StripeSession> = res.data;
+        console.log('listSessions:', listSessions);
+        if (listSessions.length > 0) {
+          console.log('Sessions Stripe trouvées pour ce client.');
+          for (const session of listSessions) {
+            const invoiceId = session.invoice;
+            const subscriptionId = session.subscription;
+            console.log('invoiceId :', invoiceId);
+            console.log('subscription:', session.subscription);
+            console.log('mode:', session.mode);
+            this.stripeSession = session;
+            this.saveStripeSessionInLocal();
+            if (subscriptionId) {
+              this.fetchStripeSubscriptionById2(subscriptionId);
+            }
+            if (invoiceId) {
+              console.log('invoiceId found:', invoiceId);
+              // Vous pouvez ajouter un traitement supplémentaire ici si nécessaire
+            } else {
+              console.log('No invoiceId found.');
+            }
+            console.log('Session ID:', session.id, ' - Amount Total:', session.amount_total, ' - Payment Status:', session.payment_status);
+          }
+        }
+      },
+      error: (err: any) => {
+        console.error('Erreur from bgstripegetsessionsbyclient2:', err);
+      },
+    });
+  }
+
+  fetchStripeSubscriptionById() {
+    const subscriptionId = this.stripeSession?.subscription;
+    console.log('getStripeSubscriptionById pour le subscriptionId :', subscriptionId);
+    if (subscriptionId) {
+      this.fetchStripeSubscriptionById2(subscriptionId);
+    } else {
+      console.error('Aucun subscriptionId trouvé dans la session Stripe.');
+    }
+  }
+  fetchStripeSubscriptionById2(subscriptionId: string) {
+
+    if (!subscriptionId) {
+      console.error('Aucun ID d\'abonnement trouvé dans la session Stripe.');
+      return;
+    }
+    const baseUrl =
+      `${baseUrl0}/bgstripegetsubscriptions2`;
+    const params = new URLSearchParams({
+      subscriptionId: subscriptionId,
+    });
+    this.http.get<any>(`${baseUrl}?${params.toString()}`, {}).subscribe({
+      next: (res) => {
+        console.log('Response from bgstripegetsubscriptions2:', res);
+        this.stripeSubscription = res;
+        this.saveStripeSubscriptionInLocal();
+      },
+      error: (err) => {
+        console.error('Erreur from bgstripegetsubscriptions2:', err);
+      },
+    });
+  }
+
+  saveStripeCustomerInLocal() {
+    this.saveObjectInLocal('stripeCustomer', this.stripeCustomer);
+  }
+  getStripeCustomerFromLocal(): StripeCustomer | null {
+    const stripeCustomer = localStorage.getItem('stripeCustomer');
+    return stripeCustomer ? JSON.parse(stripeCustomer) : null;
+  }
+
+  saveStripeSessionInLocal() {
+    this.saveObjectInLocal('stripeSession', this.stripeSession);
+  }
+
+  saveStripeSubscriptionInLocal() {
+    this.saveObjectInLocal('stripeSubscription', this.stripeSubscription);
+  }
+  getStripeSessionFromLocal(): StripeSession | null {
+    const stripeSession = localStorage.getItem('stripeSession');
+    return stripeSession ? JSON.parse(stripeSession) : null;
+  }
+
+  getStripeSubscriptionFromLocal(): Subscription | null {
+    const stripeSubscription = localStorage.getItem('stripeSubscription');
+    return stripeSubscription ? JSON.parse(stripeSubscription) : null;
+  }
+  getStripeSubscriptionTimestampFromLocal(): number | null {
+    const timestamp = localStorage.getItem('stripeSubscription_timestamp');
+    return timestamp ? parseInt(timestamp, 10) : null;
+  }
+
+  private saveObjectInLocal(key: string, obj: any) {
+    localStorage.setItem(key, JSON.stringify(obj));
+    localStorage.setItem(key + '_timestamp', Date.now().toString());
+  }
+
+  createOrSearchStripeCustomer(email: string | null) {
+    console.log('Recherche ou création du client Stripe pour email :', email);
+    if (!email) return;
+    this.searchStripeCustomerOrCreate();
+
+  }
+
+ isSubscriptionActif():boolean {
+    if (this.stripeSubscription && this.stripeSession) {
+      const abonnementActif = isAbonnementActif(this.stripeSubscription, this.stripeSession);
+      console.log('Abonnement actif:', abonnementActif);
+      const current_period_end = this.stripeSubscription.items.data[0].current_period_end;
+      console.log('Abonnement actif current period end:',  new Date(current_period_end * 1000).toLocaleDateString());
+      const now = Math.floor(Date.now() / 1000); // secondes
+      if (abonnementActif && (current_period_end && (current_period_end > now))) {
+        return true
+      }else {
+        return false;
+      }
+
+    }
+    return false;
+  }
+
 }
 
 function isAbonnementActif(stripeSubscription: Subscription | null, stripeSession: StripeSession | null): boolean {
@@ -15,7 +208,7 @@ function isAbonnementActif(stripeSubscription: Subscription | null, stripeSessio
 
   const now = Math.floor(Date.now() / 1000);
   if (stripeSubscription.status === 'active') {
-   return true
+    return true
   }
   if (stripeSession.status === 'incomplete') {
     return true;// Je fais confiance a stripe pour gérer les paiements incomplets
@@ -24,6 +217,198 @@ function isAbonnementActif(stripeSubscription: Subscription | null, stripeSessio
   return false;
 }
 
+
+export interface StripeInvoice {
+  id: string;
+  object: string;
+  account_country: string;
+  account_name: string;
+  account_tax_ids: string[] | null;
+  amount_due: number;
+  amount_overpaid: number;
+  amount_paid: number;
+  amount_remaining: number;
+  amount_shipping: number;
+  application: string | null;
+  attempt_count: number;
+  attempted: boolean;
+  auto_advance: boolean;
+  automatic_tax: {
+    disabled_reason: string | null;
+    enabled: boolean;
+    liability: string | null;
+    provider: string | null;
+    status: string | null;
+  };
+  automatically_finalizes_at: number | null;
+  billing_reason: string;
+  collection_method: string;
+  created: number;
+  currency: string;
+  custom_fields: any | null;
+  customer: string;
+  customer_address: any | null;
+  customer_email: string | null;
+  customer_name: string | null;
+  customer_phone: string | null;
+  customer_shipping: any | null;
+  customer_tax_exempt: string;
+  customer_tax_ids: any[];
+  default_payment_method: string | null;
+  default_source: string | null;
+  default_tax_rates: any[];
+  description: string | null;
+  discounts: any[];
+  due_date: number | null;
+  effective_at: number;
+  ending_balance: number;
+  footer: string | null;
+  from_invoice: any | null;
+  hosted_invoice_url: string | null;
+  invoice_pdf: string | null;
+  issuer: {
+    type: string;
+  };
+  last_finalization_error: any | null;
+  latest_revision: any | null;
+  lines: {
+    object: string;
+    data: Array<{
+      id: string;
+      object: string;
+      amount: number;
+      currency: string;
+      description: string;
+      discount_amounts: any[];
+      discountable: boolean;
+      discounts: any[];
+      invoice: string;
+      livemode: boolean;
+      metadata: Record<string, any>;
+      parent: {
+        invoice_item_details: any | null;
+        subscription_item_details?: {
+          invoice_item: string | null;
+          proration: boolean;
+          proration_details: {
+            credited_items: any | null;
+          };
+          subscription: string;
+          subscription_item: string;
+        };
+        type: string;
+      };
+      period: {
+        end: number;
+        start: number;
+      };
+      pretax_credit_amounts: any[];
+      pricing: {
+        price_details?: {
+          price: string;
+          product: string;
+        };
+        type: string;
+        unit_amount_decimal: string;
+      };
+      quantity: number;
+      taxes: any[];
+    }>;
+    has_more: boolean;
+    total_count: number;
+    url: string;
+  };
+  livemode: boolean;
+  metadata: Record<string, any>;
+  next_payment_attempt: number | null;
+  number: string;
+  on_behalf_of: string | null;
+  parent: {
+    quote_details: any | null;
+    subscription_details?: {
+      metadata: Record<string, any>;
+      subscription: string;
+    };
+    type: string;
+  };
+  payment_settings: {
+    default_mandate: string | null;
+    payment_method_options: {
+      acss_debit: any | null;
+      bancontact: any | null;
+      card?: {
+        request_three_d_secure: string;
+      };
+      customer_balance: any | null;
+      konbini: any | null;
+      sepa_debit: any | null;
+      us_bank_account: any | null;
+    };
+    payment_method_types: string[] | null;
+  };
+  period_end: number;
+  period_start: number;
+  post_payment_credit_notes_amount: number;
+  pre_payment_credit_notes_amount: number;
+  receipt_number: string | null;
+  rendering: any | null;
+  shipping_cost: any | null;
+  shipping_details: any | null;
+  starting_balance: number;
+  statement_descriptor: string | null;
+  status: string;
+  status_transitions: {
+    finalized_at: number | null;
+    marked_uncollectible_at: number | null;
+    paid_at: number | null;
+    voided_at: number | null;
+  };
+  subtotal: number;
+  subtotal_excluding_tax: number;
+  test_clock: any | null;
+  total: number;
+  total_discount_amounts: any[];
+  total_excluding_tax: number;
+  total_pretax_credit_amounts: any[];
+  total_taxes: any[];
+  webhooks_delivered_at: number | null;
+}
+
+export type StripeCustomer = {
+  address: {
+    city: string | null;
+    country: string | null;
+    line1: string | null;
+    line2: string | null;
+    postal_code: string | null;
+    state?: string | null;
+  };
+  balance: number;
+  created: number;
+  currency: string;
+  default_source: string | null;
+  delinquent: boolean;
+  description: string | null;
+  discount: any | null;
+  email: string | null;
+  id: string;
+  invoice_prefix: string;
+  invoice_settings: {
+    custom_fields: any | null;
+    default_payment_method: string | null;
+    footer: string | null;
+    rendering_options: any | null;
+  };
+  livemode: boolean;
+  metadata: Record<string, any>;
+  name: string | null;
+  object: string;
+  phone: string | null;
+  preferred_locales: string[];
+  shipping: any | null;
+  tax_exempt: string;
+  test_clock: any | null;
+};
 
 
 export interface Price {

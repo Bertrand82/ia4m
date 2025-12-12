@@ -1,1 +1,12 @@
-<p>bg-auth works!</p>
+<span *ngIf="authservice.currentUser() as user; else notConnected" style="border: 1px solid black;">
+  Connecté en tant que {{ user?.email }}
+  <button (click)="onSettings()" class="nav-btn">
+   <i class="fas fa-cog"></i>
+</button>
+</span>
+
+<ng-template #notConnected>
+  <button (click)="onConnectionRequest()" class="nav-btn primary">
+    <i class="fa-regular fa-user"></i> Connexion
+  </button>
+</ng-template>
