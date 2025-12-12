@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BgAuthService } from './bg-auth-service';
 
 @Component({
   selector: 'app-bg-auth',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './bg-auth.scss',
 })
 export class BgAuth {
-
+  constructor(authservice: BgAuthService) {}
 }

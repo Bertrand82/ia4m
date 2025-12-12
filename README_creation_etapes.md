@@ -101,6 +101,8 @@ firebase experiments:enable webframeworks
 ## Etape 3 Configurer Gemini
 
 ## Etape 4 Monétiser 
+  - Firebase ne propose pas directement un produit ou un service pour gérer les souscriptions mensuelles de vos utilisateurs
+  - Il faut utiliser Stripe
 
 ## Step 2 Set up Firebase products using the Console or CLI
 
