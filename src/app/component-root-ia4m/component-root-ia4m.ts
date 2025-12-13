@@ -16,11 +16,12 @@ interface Email {
 @Component({
   selector: 'Ia4m',
   standalone: true,
-  imports: [CommonModule,BgAuth], // nécessaire pour *ngFor et *ngIf
+  imports: [CommonModule, BgAuth], // nécessaire pour *ngFor et *ngIf
   templateUrl: './component-root-ia4m.html',
   styleUrls: ['./component-root-ia4m.scss'],
 })
-export class  Ia4m{
+export class Ia4m {
+
   emails: Email[] = [
     {
       id: 1,
@@ -60,5 +61,9 @@ export class  Ia4m{
     this.selectedEmail = email;
     // Marquer comme lu pour l'exemple
     email.read = true;
+  }
+
+  debug() {
+    console.log('Debug info :');
   }
 }

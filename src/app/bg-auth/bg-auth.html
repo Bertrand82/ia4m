@@ -1,6 +1,6 @@
 <span *ngIf="authservice.currentUser() as user; else notConnected" style="border: 1px solid black;">
   Connecté en tant que {{ user?.email }}
-  <button (click)="onSettings()" class="nav-btn">
+  <button class="buttonBg" (click)="onSettings()" class="nav-btn">
    <i class="fas fa-cog"></i>
 </button>
 </span>
