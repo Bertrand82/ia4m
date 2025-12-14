@@ -1,0 +1,28 @@
+
+
+
+      <ul class="email-list" role="list">
+        <li
+          class="email-item"
+          *ngFor="let email of getEmails()"
+          [class.unread]="!email.read"
+          (click)="select(email)"
+          role="listitem"
+          [attr.aria-selected]="getSelectedEmail() === email"
+        >
+          <div class="email-left">
+            <div class="avatar">{{ email.fromInitial }}</div>
+          </div>
+          <div class="email-body">
+            <div class="email-top">
+              <span class="sender">{{ email.from }}</span>
+              <span class="time">{{ email.time }}</span>
+            </div>
+            <div class="email-subject">{{ email.subject }}</div>
+            <div class="email-snippet">{{ email.snippet }}</div>
+          </div>
+        </li>
+      </ul>
+ 
+
+   

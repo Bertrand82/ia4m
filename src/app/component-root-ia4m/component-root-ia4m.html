@@ -16,7 +16,7 @@
       <button class="compose"  (click)="debug()">Debug</button>
 
       <ul class="folders" aria-label="Dossiers">
-        <li class="folder active">Boîte de réception <span class="count">3</span></li>
+        <li class="folder active">Boîte de réception <span class="count">{{ getEmails().length }} </span></li>
         <li class="folder">Important</li>
         <li class="folder">Envoyés</li>
         <li class="folder">Brouillons</li>
@@ -42,29 +42,8 @@
           <button class="icon-btn" type="button" title="Paramètres">⚙</button>
         </div>
       </div>
-
-      <ul class="email-list" role="list">
-        <li
-          class="email-item"
-          *ngFor="let email of emails"
-          [class.unread]="!email.read"
-          (click)="select(email)"
-          role="listitem"
-          [attr.aria-selected]="selectedEmail === email"
-        >
-          <div class="email-left">
-            <div class="avatar">{{ email.fromInitial }}</div>
-          </div>
-          <div class="email-body">
-            <div class="email-top">
-              <span class="sender">{{ email.from }}</span>
-              <span class="time">{{ email.time }}</span>
-            </div>
-            <div class="email-subject">{{ email.subject }}</div>
-            <div class="email-snippet">{{ email.snippet }}</div>
-          </div>
-        </li>
-      </ul>
+      <list-email></list-email>
+      
     </main>
 
     <!-- utilisation de "as email" pour lever l'erreur TS2531 -->
@@ -83,12 +62,7 @@
 
     <ng-template #emptyPreview>
       <aside class="preview">
-        <div class="preview__header">
-          <h3>Aperçu</h3>
-        </div>
-        <div class="preview__content">
-          <p>Sélectionnez un message pour voir son contenu ici. Cette zone peut afficher un aperçu, les pièces jointes et des actions rapides.</p>
-        </div>
+        <email-detail></email-detail>
       </aside>
     </ng-template>
   </div>

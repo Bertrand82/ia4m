@@ -1,11 +1,26 @@
-export class BgMail {
+import { MatListItemLine } from "@angular/material/list";
+
+export interface Email {
+  id: string;
+  from?: string;
+  fromInitial?: string;
+  time?: string;
+  subject?: string;
+  snippet?: string;
+  body?: string;
+  read?: boolean;
+}
+export class BgMail implements Email{
 
 
     id: string;
     from?: string;
+    fromInitial?: string;
     fromShort?: string;
     to?: string;
     date?: string;
+    time?: string;
+    body?: string;
     subject?: string;
     snippet?: string;
     bodyTxt?: string;
@@ -14,6 +29,7 @@ export class BgMail {
     labelIds: string[] | undefined;
     labels?: string[];
     selected = false;
+    read?: boolean;
     constructor(
         id: string,
         from?: string,
@@ -122,6 +138,7 @@ export class BgMail {
         window.open(this.geminiResponse?.applyLink, '_blank')
     }
 }
+
 
 
 export class GeminiResponse {

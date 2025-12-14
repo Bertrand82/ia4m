@@ -1,0 +1,41 @@
+@if (selectedEmail) {
+  <div class="preview__header">
+    <div class="email-header">
+      <h3>{{ selectedEmail.subject || '(Sans objet)' }}</h3>
+      <div class="email-meta">
+        <div class="sender">
+          @if (selectedEmail.fromInitial) {
+            <span class="avatar">{{ selectedEmail.fromInitial }}</span>
+          }
+          <span class="sender-name">{{ selectedEmail.from || 'Expéditeur inconnu' }}</span>
+        </div>
+        <span class="time">{{ selectedEmail.time || selectedEmail.date }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="preview__content">
+    @if (selectedEmail.body) {
+      <div class="email-body" [innerHTML]="selectedEmail.body"></div>
+    } @else if (selectedEmail.bodyTxt) {
+      <div class="email-body">{{ selectedEmail.bodyTxt }}</div>
+    } @else if (selectedEmail.snippet) {
+      <div class="email-snippet">{{ selectedEmail.snippet }}</div>
+    } @else {
+      <p class="no-content">Aucun contenu disponible</p>
+    }
+    
+    @if (selectedEmail.geminiResponse) {
+      <div class="gemini-response">
+        <h4>Analyse IA</h4>
+        <div class="gemini-content">{{ selectedEmail.geminiResponse }}</div>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="preview__header">
+    <h3>Aperçu</h3>
+  </div>
+  <div class="preview__content">
+    <p class="empty-state">Sélectionnez un message pour voir son contenu ici.</p>
+  </div>
+}

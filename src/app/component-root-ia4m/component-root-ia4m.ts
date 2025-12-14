@@ -1,30 +1,26 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BgAuth } from '../bg-auth/bg-auth';
-
-interface Email {
-  id: number;
-  from: string;
-  fromInitial: string;
-  time: string;
-  subject: string;
-  snippet: string;
-  body: string;
-  read: boolean;
-}
+import { GisGmailServiceHelper } from '../services/gis-gmail.service.helper';
+import { Email } from '../modeles/BgMail';
+import { Updatable } from '../services/UpDatable';
+import { ComponentListEmail } from '../component-list-email/component-list-email';
+import { ComponentEmailDetail } from '../component-email-detail/component-email-detail';  
 
 @Component({
   selector: 'Ia4m',
   standalone: true,
-  imports: [CommonModule, BgAuth], // nécessaire pour *ngFor et *ngIf
+  imports: [CommonModule, BgAuth, ComponentListEmail, ComponentEmailDetail], // nécessaire pour *ngFor et *ngIf
   templateUrl: './component-root-ia4m.html',
   styleUrls: ['./component-root-ia4m.scss'],
 })
-export class Ia4m {
+export class Ia4m implements Updatable {
+
+  
 
   emails: Email[] = [
     {
-      id: 1,
+      id: "1",
       from: 'Alice Martin',
       fromInitial: 'A',
       time: '09:12',
@@ -34,7 +30,7 @@ export class Ia4m {
       read: false
     },
     {
-      id: 2,
+      id: "2",
       from: 'Newsletter IA',
       fromInitial: 'N',
       time: 'Hier',
@@ -44,7 +40,7 @@ export class Ia4m {
       read: true
     },
     {
-      id: 3,
+      id: "3",
       from: 'Service client',
       fromInitial: 'S',
       time: '2 Dec',
@@ -57,7 +53,14 @@ export class Ia4m {
 
   selectedEmail: Email | null = null;
 
+  constructor(private gmailHelper: GisGmailServiceHelper,private changeDetectorRef: ChangeDetectorRef) {}
+  
+  updateView(): void {
+   this.changeDetectorRef.detectChanges();
+  }
+
   select(email: Email) {
+    console.log('Email sélectionné :', email);
     this.selectedEmail = email;
     // Marquer comme lu pour l'exemple
     email.read = true;
@@ -65,5 +68,19 @@ export class Ia4m {
 
   debug() {
     console.log('Debug info :');
+    this.processMessages();
+  }
+
+  processMessages() {
+    console.log('Traitement des messages...');
+    this.gmailHelper.processMessages(this);
+  } 
+
+  getEmails(): Email[] {
+    return this.gmailHelper.messages;
+  }
+
+  getSelectedEmail(): Email | null {
+    return this.gmailHelper.selectedEmail;
   }
 }

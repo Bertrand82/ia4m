@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, firstValueFrom, from, Observable, throwError } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
@@ -20,17 +20,17 @@ export class GisGmailService {
   labelsGmail: Array<GmailLabel> = [];
 
   constructor(private http: HttpClient) {
-    this.initTokenClient();
+   
   }
 
   /** Initialise le token client GIS. */
   private initTokenClient() {
-    if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
+    if (!(window as any).google || !(window as any).google.accounts || !(window as any).google.accounts.oauth2) {
       console.warn('GIS client non chargé — assurez-vous d\'inclure https://accounts.google.com/gsi/client dans index.html');
       return;
     }
     console.log('bg00 Initialisation du token client GIS avec client ID=', this.CLIENT_ID);
-    this.tokenClient = window.google.accounts.oauth2.initTokenClient({
+    this.tokenClient = (window as any).google.accounts.oauth2.initTokenClient({
       client_id: this.CLIENT_ID,
       scope: this.SCOPES,
       // callback sera appelé lorsque requestAccessToken retourne un token (ou une erreur)
