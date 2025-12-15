@@ -1,16 +1,16 @@
 import { MatListItemLine } from "@angular/material/list";
 
 export interface Email {
-  id: string;
-  from?: string;
-  fromInitial?: string;
-  time?: string;
-  subject?: string;
-  snippet?: string;
-  body?: string;
-  read?: boolean;
+    id: string;
+    from?: string;
+    fromInitial?: string;
+    time?: string;
+    subject?: string;
+    snippet?: string;
+    body?: string;
+    read?: boolean;
 }
-export class BgMail implements Email{
+export class BgMail implements Email {
 
 
     id: string;
@@ -21,9 +21,11 @@ export class BgMail implements Email{
     date?: string;
     time?: string;
     body?: string;
+    safeBodyHtml?: string;
     subject?: string;
     snippet?: string;
     bodyTxt?: string;
+    isHtmlBody?: boolean;
     geminiResponse?: GeminiResponse;
     geminiMetaData?: GeminiUsageMetaData;
     labelIds: string[] | undefined;
@@ -45,7 +47,10 @@ export class BgMail implements Email{
         this.snippet ||= snippet;
         this.bodyTxt ||= bodyTxt;
         this.geminiResponse ||= geminiResponse;
-
+       this.isHtmlBody = this.isHtml(bodyTxt);
+        if (this.isHtmlBody) {
+            this.safeBodyHtml = bodyTxt;
+        }
     }
 
     public setFrom(from?: string): void {
@@ -62,11 +67,11 @@ export class BgMail implements Email{
 
     }
 
-     public toStringMeta(): string {
-       if (!this.geminiMetaData) {
-           return "No Gemini MetaDData";
-       }
-       return JSON.stringify(this.geminiMetaData.totalTokenCount+" cost: "+ this.geminiMetaData.totalCostForRequest()       );
+    public toStringMeta(): string {
+        if (!this.geminiMetaData) {
+            return "No Gemini MetaDData";
+        }
+        return JSON.stringify(this.geminiMetaData.totalTokenCount + " cost: " + this.geminiMetaData.totalCostForRequest());
     }
 
 
@@ -137,6 +142,15 @@ export class BgMail implements Email{
         if (!this.geminiResponse?.applyLink) { return; }
         window.open(this.geminiResponse?.applyLink, '_blank')
     }
+
+    isHtml(body?: string): boolean {
+        if (!body) {
+            return false;
+        }
+        // Heuristique simple : présence d'une balise HTML
+        const htmlLike = /<\/?[a-z][\s\S]*>/i.test(body);
+        return htmlLike;
+    }
 }
 
 
@@ -154,7 +168,7 @@ export class GeminiResponse {
     extraNotes: string | undefined;
     confidence: number | undefined;
     label: string | undefined;
-    labels: Array<string>   | undefined;
+    labels: Array<string> | undefined;
 
 }
 
@@ -167,15 +181,15 @@ export class GeminiUsageMetaData {
 
 
     totalCostForRequest() {
-        const priceInputPer1k=0.03;
-        const priceOutputPer1k=0.06;
+        const priceInputPer1k = 0.03;
+        const priceOutputPer1k = 0.06;
         const inputCost = (this.promptTokenCount / 1000) * priceInputPer1k;
         const outputCost = (this.candidatesTokenCount / 1000) * priceOutputPer1k;
         const totalCost = inputCost + outputCost;
-        return  "" + Number(totalCost.toFixed(6)) + "  USD/100";
-       
+        return "" + Number(totalCost.toFixed(6)) + "  USD/100";
+
     }
-} 
+}
 
 
 

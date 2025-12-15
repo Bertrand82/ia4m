@@ -17,9 +17,9 @@
     @if (selectedEmail.body) {
       <div class="email-body" [innerHTML]="selectedEmail.body"></div>
     } @else if (selectedEmail.bodyTxt) {
-      <div class="email-body">{{ selectedEmail.bodyTxt }}</div>
+      <div class="email-body" [innerHTML]="selectedEmail.body">A12 {{ selectedEmail.bodyTxt }}</div>
     } @else if (selectedEmail.snippet) {
-      <div class="email-snippet">{{ selectedEmail.snippet }}</div>
+      <div class="email-snippet">A13 {{ selectedEmail.snippet }}</div>
     } @else {
       <p class="no-content">Aucun contenu disponible</p>
     }
@@ -27,7 +27,7 @@
     @if (selectedEmail.geminiResponse) {
       <div class="gemini-response">
         <h4>Analyse IA</h4>
-        <div class="gemini-content">{{ selectedEmail.geminiResponse }}</div>
+        <div class="gemini-content">{{ selectedEmail.geminiResponse.extraNotes }}</div>
       </div>
     }
   </div>

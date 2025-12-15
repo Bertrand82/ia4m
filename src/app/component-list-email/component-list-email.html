@@ -11,7 +11,9 @@
           [attr.aria-selected]="getSelectedEmail() === email"
         >
           <div class="email-left">
-            <div class="avatar">{{ email.fromInitial }}</div>
+            <div class="avatar">{{ email.fromInitial }} 
+             <button (click)="email.displayInGmailByMessageId(email.id)">Open</button> 
+            </div>
           </div>
           <div class="email-body">
             <div class="email-top">
