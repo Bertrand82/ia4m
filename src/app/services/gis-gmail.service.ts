@@ -5,6 +5,7 @@ import { switchMap, catchError } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { environment_secret } from '../environments/environment_secret';
 import { BgMail } from '../modeles/BgMail';
+import { onLabelsDownloaded } from './UpDatable';
 @Injectable({ providedIn: 'root' })
 export class GisGmailService {
   
@@ -241,13 +242,16 @@ export class GisGmailService {
         this.labelsGmail = resp.labels;
         console.log('bgB process Label :' + " labels:", this.labelsGmail);
         this.updateLabelAlreadyProcessedId(resp.labels);
+        this.listenerOnLabelsDownloaded?.onLabelsDownloaded(resp.labels);
         this.fetchingLabels = false;
+        
       })
       .catch((err) => {
         console.error('bgB process Label :' + "  err:", err);
         this.fetchingLabels = false;
       });
   };
+  listenerOnLabelsDownloaded: onLabelsDownloaded | undefined;
   public updateLabelAlreadyProcessedId (labels: Array<GmailLabel>) {
     const  labelAlreadyProcessedId =labels.find(lbl => lbl.name === this.labelAlreadyProcessed)?.id;
     console.log('bgB updateLabelAlreadyProcessedId :' ,labelAlreadyProcessedId);
@@ -387,9 +391,9 @@ export interface GmailLabel {
   id: string;
   /** Nom affiché du label */
   name: string;
-  /** Visibilité du label dans la liste des messages (optionnel) */
+  /** Visibilité du message dans la liste des messages (optionnel) */
   messageListVisibility?: 'hide' | 'show';
-  /** Visibilité du label dans la liste des labels (optionnel) */
+  /** Visibilité du label dans la liste des labels (optionnel) du message */
   labelListVisibility?: 'labelHide' | 'labelShow';
   /** Type du label : système ou utilisateur */
   type: 'system' | 'user';

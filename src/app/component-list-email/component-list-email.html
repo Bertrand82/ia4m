@@ -13,6 +13,9 @@
           <div class="email-left">
             <div class="avatar">{{ email.fromInitial }} 
              <button (click)="email.displayInGmailByMessageId(email.id)">Open</button> 
+              <span class="email-labels" *ngIf="email.labelIds && email.labelIds.length > 0">
+                <span class="label" *ngFor="let label of email.labels">{{label }} </span>
+              </span>
             </div>
           </div>
           <div class="email-body">
@@ -20,8 +23,11 @@
               <span class="sender">{{ email.from }}</span>
               <span class="time">{{ email.time }}</span>
             </div>
+
             <div class="email-subject">{{ email.subject }}</div>
             <div class="email-snippet">{{ email.snippet }}</div>
+           
+          
           </div>
         </li>
       </ul>

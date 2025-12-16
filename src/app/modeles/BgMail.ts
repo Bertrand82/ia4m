@@ -13,6 +13,8 @@ export interface Email {
 export class BgMail implements Email {
 
 
+
+
     id: string;
     from?: string;
     fromInitial?: string;
@@ -20,11 +22,11 @@ export class BgMail implements Email {
     to?: string;
     date?: string;
     time?: string;
-    body?: string;
     safeBodyHtml?: string;
     subject?: string;
     snippet?: string;
     bodyTxt?: string;
+    bodyHtml?: string;
     isHtmlBody?: boolean;
     geminiResponse?: GeminiResponse;
     geminiMetaData?: GeminiUsageMetaData;
@@ -38,7 +40,9 @@ export class BgMail implements Email {
         subject?: string,
         snippet?: string,
         bodyTxt?: string,
-        geminiResponse?: GeminiResponse
+        bodyHtml?: string,
+        geminiResponse?: GeminiResponse,
+        isHtmlBody = false
     ) {
         this.id = id;
         this.setFrom(from);
@@ -46,8 +50,9 @@ export class BgMail implements Email {
         this.subject ||= subject;
         this.snippet ||= snippet;
         this.bodyTxt ||= bodyTxt;
+        this.bodyHtml ||= bodyHtml;
         this.geminiResponse ||= geminiResponse;
-       this.isHtmlBody = this.isHtml(bodyTxt);
+        this.isHtmlBodyUpdate();
         if (this.isHtmlBody) {
             this.safeBodyHtml = bodyTxt;
         }
@@ -122,10 +127,13 @@ export class BgMail implements Email {
         return this.geminiResponse.labels?.join(", ") || "";
     }
 
-
+    // Deprecated
     isConsistent(): Boolean {
         // Vérifie que les champs essentiels sont présents
-        if (!this.from || (!this.subject && !this.bodyTxt)) {
+        if (!this.from) {
+            return false;
+        }
+        if (!this.subject && !this.bodyTxt) {
             return false;
         }
         return true;
@@ -143,14 +151,44 @@ export class BgMail implements Email {
         window.open(this.geminiResponse?.applyLink, '_blank')
     }
 
-    isHtml(body?: string): boolean {
-        if (!body) {
-            return false;
+    isHtmlBodyUpdate(): void {
+        if (this.bodyHtml === undefined) {
+            this.isHtmlBody = false;
+        }else if (this.bodyHtml.length>0){ 
+            this.isHtmlBody = true;
+        }else  if (!this.bodyTxt) {
+            this.isHtmlBody = false;
+        } else {
+            // Heuristique simple : présence d'une balise HTML
+            const htmlLike : boolean= /<\/?[a-z][\s\S]*>/i.test(this.bodyTxt);
+            if (htmlLike && this.bodyTxt.length < 10000) {
+                // Si le corps est trop long, on évite de le marquer comme HTML pour des raisons de performance
+                this.bodyHtml = this.bodyTxt;
+                this.isHtmlBody = htmlLike;
+            }
+            
         }
-        // Heuristique simple : présence d'une balise HTML
-        const htmlLike = /<\/?[a-z][\s\S]*>/i.test(body);
-        return htmlLike;
+
     }
+
+
+getBodyHtml() {
+    
+    return this.bodyHtml;
+}
+
+
+merge(msgG0: BgMail) {
+    if (!this.from) {
+        this.from = msgG0.from;
+    }
+    if (!this.bodyTxt) {
+        this.bodyTxt = msgG0.bodyTxt;
+    }
+    if (!this.subject) {
+        this.subject = msgG0.subject;
+    }
+}
 }
 
 
@@ -217,6 +255,8 @@ function extractDisplayName(raw: string | undefined): string | undefined {
 
     // Décoder les mots encodés RFC2047 s'il y en a
     return decodeMimeWords(namePart);
+
+
 }
 
 function decodeMimeWords(str: string): string {
@@ -249,4 +289,6 @@ function decodeMimeWords(str: string): string {
             return encoded;
         }
     });
+
+
 }

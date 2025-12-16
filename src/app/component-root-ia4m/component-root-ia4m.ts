@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BgAuth } from '../bg-auth/bg-auth';
 import { GisGmailServiceHelper } from '../services/gis-gmail.service.helper';
-import { Email } from '../modeles/BgMail';
+import { BgMail, Email } from '../modeles/BgMail';
 import { Updatable } from '../services/UpDatable';
 import { ComponentListEmail } from '../component-list-email/component-list-email';
 import { ComponentEmailDetail } from '../component-email-detail/component-email-detail';  
@@ -70,14 +70,17 @@ export class Ia4m implements Updatable {
     console.log('Debug info :');
     this.processMessages();
   }
-
+ debug2() {
+    console.log('Debug2 info listMessages :', this.gmailHelper.getMessages());
+    
+  }
   processMessages() {
     console.log('Traitement des messages...');
     this.gmailHelper.processMessages(this);
   } 
 
-  getEmails(): Email[] {
-    return this.gmailHelper.messages;
+  getEmails(): BgMail[] {
+    return this.gmailHelper.getMessages();
   }
 
   getSelectedEmail(): Email | null {

@@ -11,7 +11,7 @@ import { Updatable } from '../services/UpDatable';
   standalone: true,
   imports: [CommonModule], // nécessaire pour *ngFor et *ngIf
   templateUrl: './component-list-email.html',
-  styleUrls: ['../component-root-ia4m/component-root-ia4m.scss'],
+  styleUrls: ['./component-list-email.scss'],
 })
 export class ComponentListEmail implements Updatable {
 
@@ -29,6 +29,8 @@ export class ComponentListEmail implements Updatable {
 
   select(email: BgMail) {
     console.log('bg Email sélectionned:', email);
+    console.log('bg Email sélectionned gmailHelper :', this.gmailHelper);
+    console.log('bg Email sélectionned gmail :', this.gmailHelper.gmail);
     this.gmailHelper.setSelectedMessage(email);
     // Marquer comme lu pour l'exemple
     email.read = true;
@@ -45,7 +47,7 @@ export class ComponentListEmail implements Updatable {
   }
 
   getEmails(): BgMail[] {
-    return this.gmailHelper.messages;
+    return this.gmailHelper.getMessages();
   }
 
   getEmailSelected(): Email | null {
@@ -54,6 +56,8 @@ export class ComponentListEmail implements Updatable {
   getSelectedEmail(): Email | null {
     return this.gmailHelper.selectedEmail;
   }
-
+  getLabel(arg0: string[]): string {
+    return this.gmailHelper.getLabelNames(arg0);
+  }
 
 }
