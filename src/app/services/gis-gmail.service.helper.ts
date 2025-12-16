@@ -10,6 +10,7 @@ import { ComponentEmailDetail } from '../component-email-detail/component-email-
 export class GisGmailServiceHelper implements OnInit, onLabelsDownloaded {
 
 
+
   listenersOnChangeEmailSelected: onChangeEmailSelected[] = [];
 
   addListenerOnChangeEmailSelected(listener: onChangeEmailSelected): void {
@@ -55,9 +56,15 @@ export class GisGmailServiceHelper implements OnInit, onLabelsDownloaded {
   setSelectedMessage(email: BgMail) {
 
     this.selectedEmail = email;
-    console.log('setSelectedMessage called, email:', email);
-    console.log('Notifying listeners of selected email change...size list listeners :', this.listenersOnChangeEmailSelected.length);
     this.listenersOnChangeEmailSelected.forEach(listener => listener.onChangeEmailSelected(email));
+     this.updatable?.updateView();
+  }
+
+  deselectEmail() {
+   
+     this.listenersOnChangeEmailSelected.forEach(listener => listener.onChangeEmailSelected(null));
+      this.selectedEmail = null;
+    this.updatable?.updateView();
   }
 
   onSignIn() {

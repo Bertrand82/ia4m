@@ -16,6 +16,7 @@ import { ComponentEmailDetail } from '../component-email-detail/component-email-
 })
 export class Ia4m implements Updatable {
 
+
   
 
   emails: Email[] = [
@@ -53,10 +54,16 @@ export class Ia4m implements Updatable {
 
   selectedEmail: Email | null = null;
 
-  constructor(private gmailHelper: GisGmailServiceHelper,private changeDetectorRef: ChangeDetectorRef) {}
+  showDetail:boolean=false;
+  constructor(public gmailHelper: GisGmailServiceHelper,private changeDetectorRef: ChangeDetectorRef) {}
   
   updateView(): void {
    this.changeDetectorRef.detectChanges();
+   if( this.gmailHelper.selectedEmail){
+    this.showDetail=true;
+   }else{
+    this.showDetail=false;
+   }  
   }
 
   select(email: Email) {
@@ -85,5 +92,8 @@ export class Ia4m implements Updatable {
 
   getSelectedEmail(): Email | null {
     return this.gmailHelper.selectedEmail;
+  }
+  deselectEmail() {
+    this.gmailHelper.deselectEmail();
   }
 }

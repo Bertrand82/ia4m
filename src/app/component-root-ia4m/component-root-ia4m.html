@@ -14,7 +14,6 @@
     <aside class="sidebar">
       <button class="compose">Nouveau message</button>
       <button class="compose"  (click)="debug()">Debug</button>
-     <button class="compose"  (click)="debug2()">Debug2</button>
 
       <ul class="folders" aria-label="Dossiers">
         <li class="folder active">Boîte de réception <span class="count">{{ getEmails().length }} </span></li>
@@ -33,7 +32,7 @@
       </div>
     </aside>
 
-    <main class="inbox">
+    <main class="inbox"  *ngIf="!(showDetail)">
       <div class="inbox__header">
         <div class="search">
           <input type="search" placeholder="Rechercher dans les emails" aria-label="Rechercher">
@@ -46,27 +45,16 @@
       <list-email></list-email>
       
     </main>  
-
     <!-- utilisation de "as email" pour lever l'erreur TS2531 -->
-    <aside class="preview" *ngIf="selectedEmail as email; else emptyPreview">
+    <aside class="preview" *ngIf="showDetail">
       <div class="preview__header">
-        <h3>{{ email.subject }}</h3>
-        <div class="preview-meta">
-          <span class="sender">{{ email.from }}</span>
-          <span class="time">{{ email.time }}</span>
+        <button class="icon-btn" type="button" (click)="deselectEmail()" title="Fermer">deselectEmail</button>
+        <email-detail></email-detail>
         </div>
-      </div>
-      <div class="preview__content">
-        <p>{{ email.body }}</p>
-      </div>
     </aside>
 
-    <ng-template #emptyPreview>
-      <aside class="preview">
-        <email-detail></email-detail>
-      </aside>
-    </ng-template>
+   
   </div>
 
-  <button class="fab" aria-label="Nouveau messageXXXXXXXXXXXXXXXXXXX">+XXXXXXXXXXXXX</button>
+  <button class="fab" aria-label="X">+XXXXXXXXXXXXX</button>
 </div>

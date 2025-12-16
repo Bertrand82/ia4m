@@ -13,12 +13,14 @@ import DOMPurify from 'dompurify';
 })
 export class ComponentEmailDetail implements onChangeEmailSelected {
 
+
   selectedEmail: BgMail | null = null;
 
   constructor(private gmailHelper: GisGmailServiceHelper, public changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.gmailHelper.addListenerOnChangeEmailSelected(this);
+    this.selectedEmail = this.gmailHelper.selectedEmail;
   }
   onChangeEmailSelected(email: BgMail): void {
     console.log('bg Email sélectionné dans le détail :', email);
@@ -38,6 +40,12 @@ export class ComponentEmailDetail implements onChangeEmailSelected {
       return clean;
     }
     return null;
+  }
+
+  debug() {
+    console.log('Debug info : selectedEmail :',this.selectedEmail);
+    console.log('Debug info : gmailHelper :',this.gmailHelper);
+    console.log('Debug info : gmailHelper.selectedEmail :',this.gmailHelper.selectedEmail);
   }
 
 }    

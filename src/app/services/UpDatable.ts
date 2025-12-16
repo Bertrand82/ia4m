@@ -6,7 +6,7 @@ export interface Updatable {
 }
 
 export interface onChangeEmailSelected {
-  onChangeEmailSelected(email: BgMail): void;
+  onChangeEmailSelected(email: BgMail|null): void;
 }
 
 export interface onLabelsDownloaded {
