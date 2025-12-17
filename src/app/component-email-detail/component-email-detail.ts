@@ -20,7 +20,7 @@ export class ComponentEmailDetail implements onChangeEmailSelected {
 
   ngOnInit(): void {
     this.gmailHelper.addListenerOnChangeEmailSelected(this);
-    this.selectedEmail = this.gmailHelper.selectedEmail;
+    this.selectedEmail= this.gmailHelper.selectedEmail;
   }
   onChangeEmailSelected(email: BgMail): void {
     console.log('bg Email sélectionné dans le détail :', email);

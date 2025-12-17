@@ -4,6 +4,7 @@ import { BgMail, GeminiResponse, GeminiUsageMetaData } from '../modeles/BgMail';
 import { BgGemini } from './bg-gemini';
 import { onChangeEmailSelected, onLabelsDownloaded, Updatable } from './UpDatable';
 import { ComponentEmailDetail } from '../component-email-detail/component-email-detail';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -11,12 +12,11 @@ export class GisGmailServiceHelper implements OnInit, onLabelsDownloaded {
 
 
 
-  listenersOnChangeEmailSelected: onChangeEmailSelected[] = [];
+  listenerOnChangeEmailSelected: onChangeEmailSelected | undefined;
 
   addListenerOnChangeEmailSelected(listener: onChangeEmailSelected): void {
-    console.log('bg1 Adding listener for email selected change :' + this.listenersOnChangeEmailSelected.length);
-    this.listenersOnChangeEmailSelected.push(listener);
-    console.log('bg2 Adding listener for email selected change :' + this.listenersOnChangeEmailSelected.length);
+   this.listenerOnChangeEmailSelected =listener;
+
   }
 
   private   messages2: Array<BgMail> = [];
@@ -56,13 +56,13 @@ export class GisGmailServiceHelper implements OnInit, onLabelsDownloaded {
   setSelectedMessage(email: BgMail) {
 
     this.selectedEmail = email;
-    this.listenersOnChangeEmailSelected.forEach(listener => listener.onChangeEmailSelected(email));
+    this.listenerOnChangeEmailSelected?.onChangeEmailSelected(email);
      this.updatable?.updateView();
   }
 
   deselectEmail() {
    
-     this.listenersOnChangeEmailSelected.forEach(listener => listener.onChangeEmailSelected(null));
+     this.listenerOnChangeEmailSelected?.onChangeEmailSelected(null);
       this.selectedEmail = null;
     this.updatable?.updateView();
   }

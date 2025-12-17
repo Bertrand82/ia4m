@@ -16,43 +16,7 @@ import { ComponentEmailDetail } from '../component-email-detail/component-email-
 })
 export class Ia4m implements Updatable {
 
-
-  
-
-  emails: Email[] = [
-    {
-      id: "1",
-      from: 'Alice Martin',
-      fromInitial: 'A',
-      time: '09:12',
-      subject: 'Réunion projet — points à valider',
-      snippet: "Salut, peux-tu confirmer les éléments discutés hier ? J'ai joint l'agenda...",
-      body: "Salut,\n\nPeux-tu confirmer les éléments discutés hier ? J'ai joint l'agenda et les actions. Merci !\n\n— Alice",
-      read: false
-    },
-    {
-      id: "2",
-      from: 'Newsletter IA',
-      fromInitial: 'N',
-      time: 'Hier',
-      subject: '10 nouvelles techniques pour améliorer vos modèles',
-      snippet: "Découvrez des approches récentes pour optimiser le fine-tuning et la généralisation...",
-      body: "Bonjour,\n\nVoici notre sélection des 10 techniques à connaître pour 2025...\n\nCordialement,\nL'équipe",
-      read: true
-    },
-    {
-      id: "3",
-      from: 'Service client',
-      fromInitial: 'S',
-      time: '2 Dec',
-      subject: 'Votre commande a été expédiée',
-      snippet: "Bonjour, votre commande #12345 est en route. Suivi et détails dans le lien ci-dessous...",
-      body: "Bonjour,\n\nVotre commande #12345 a été expédiée. Suivi : ...\n\nMerci pour votre achat.",
-      read: true
-    }
-  ];
-
-  selectedEmail: Email | null = null;
+  selectedEmail: BgMail | null = null;
 
   showDetail:boolean=false;
   constructor(public gmailHelper: GisGmailServiceHelper,private changeDetectorRef: ChangeDetectorRef) {}
@@ -66,7 +30,7 @@ export class Ia4m implements Updatable {
    }  
   }
 
-  select(email: Email) {
+  select(email: BgMail) {
     console.log('Email sélectionné :', email);
     this.selectedEmail = email;
     // Marquer comme lu pour l'exemple
@@ -75,10 +39,12 @@ export class Ia4m implements Updatable {
 
   debug() {
     console.log('Debug info :');
+    this.gmailHelper.deselectEmail;
     this.processMessages();
   }
  debug2() {
     console.log('Debug2 info listMessages :', this.gmailHelper.getMessages());
+    console.log('Debug2 info showDetail :', this.showDetail);
     
   }
   processMessages() {
@@ -95,5 +61,12 @@ export class Ia4m implements Updatable {
   }
   deselectEmail() {
     this.gmailHelper.deselectEmail();
+  }
+
+  showDetail_(){
+    this.showDetail=true;
+  }
+  showList_(){
+    this.showDetail=false;
   }
 }

@@ -16,16 +16,17 @@
               <span class="email-labels" *ngIf="email.labelIds && email.labelIds.length > 0">
                 <span class="label" *ngFor="let label of email.labels">{{label }} </span>
               </span>
+              
             </div>
           </div>
           <div class="email-body">
             <div class="email-top">
-              <span class="sender">{{ email.from }}</span>
+              <span class="sender" [title]="email.fromParsedAdress?.email">{{ email.fromParsedAdress?.name }}</span>
               <span class="time">{{ email.time }}</span>
             </div>
 
-            <div class="email-subject">{{ email.subject }}</div>
-            <div class="email-snippet">{{ email.snippet }}</div>
+            <div class="email-subject">{{ email.subject }}</div>          
+            <div class="email-snippet" [innerHTML]="email.snippet"></div>
            
           
           </div>

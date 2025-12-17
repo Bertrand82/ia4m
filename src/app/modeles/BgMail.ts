@@ -1,4 +1,5 @@
 import { MatListItemLine } from "@angular/material/list";
+import { parseSingleAddress } from "../services/bg-utilMail";
 
 export interface Email {
     id: string;
@@ -34,6 +35,7 @@ export class BgMail implements Email {
     labels?: string[];
     selected = false;
     read?: boolean;
+    fromParsedAdress: ParsedAddress | undefined;
     constructor(
         id: string,
         from?: string,
@@ -42,7 +44,8 @@ export class BgMail implements Email {
         bodyTxt?: string,
         bodyHtml?: string,
         geminiResponse?: GeminiResponse,
-        isHtmlBody = false
+        isHtmlBody = false,
+        fromParsedAdress = parseSingleAddress(from)
     ) {
         this.id = id;
         this.setFrom(from);
@@ -59,8 +62,12 @@ export class BgMail implements Email {
     }
 
     public setFrom(from?: string): void {
-        this.from = from;
-        this.fromShort = extractDisplayName(from);
+        if (from) {
+
+            this.from = from;
+            this.fromShort = extractDisplayName(from);
+            this.fromParsedAdress = parseSingleAddress(from) ?? undefined;
+        }
     }
     public toString2(): string {
         if (!this.subject && this.bodyTxt) {
@@ -154,44 +161,47 @@ export class BgMail implements Email {
     isHtmlBodyUpdate(): void {
         if (this.bodyHtml === undefined) {
             this.isHtmlBody = false;
-        }else if (this.bodyHtml.length>0){ 
+        } else if (this.bodyHtml.length > 0) {
             this.isHtmlBody = true;
-        }else  if (!this.bodyTxt) {
+        } else if (!this.bodyTxt) {
             this.isHtmlBody = false;
         } else {
             // Heuristique simple : présence d'une balise HTML
-            const htmlLike : boolean= /<\/?[a-z][\s\S]*>/i.test(this.bodyTxt);
+            const htmlLike: boolean = /<\/?[a-z][\s\S]*>/i.test(this.bodyTxt);
             if (htmlLike && this.bodyTxt.length < 10000) {
                 // Si le corps est trop long, on évite de le marquer comme HTML pour des raisons de performance
                 this.bodyHtml = this.bodyTxt;
                 this.isHtmlBody = htmlLike;
             }
-            
+
         }
 
     }
 
 
-getBodyHtml() {
-    
-    return this.bodyHtml;
+    getBodyHtml() {
+
+        return this.bodyHtml;
+    }
+
+
+    merge(msgG0: BgMail) {
+        if (!this.from) {
+            this.from = msgG0.from;
+        }
+        if (!this.bodyTxt) {
+            this.bodyTxt = msgG0.bodyTxt;
+        }
+        if (!this.subject) {
+            this.subject = msgG0.subject;
+        }
+    }
 }
 
-
-merge(msgG0: BgMail) {
-    if (!this.from) {
-        this.from = msgG0.from;
-    }
-    if (!this.bodyTxt) {
-        this.bodyTxt = msgG0.bodyTxt;
-    }
-    if (!this.subject) {
-        this.subject = msgG0.subject;
-    }
+export interface ParsedAddress {
+    name: string | null;
+    email: string | null;
 }
-}
-
-
 
 export class GeminiResponse {
 
