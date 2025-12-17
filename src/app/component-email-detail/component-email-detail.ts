@@ -3,11 +3,12 @@ import { onChangeEmailSelected } from '../services/UpDatable';
 import { BgMail, Email } from '../modeles/BgMail';
 import { GisGmailServiceHelper } from '../services/gis-gmail.service.helper';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ComponentEmailResponse } from '../component-email-response/component-email-response';  
 import DOMPurify from 'dompurify';
 
 @Component({
   selector: 'email-detail',
-  imports: [],
+  imports: [ComponentEmailResponse],
   templateUrl: './component-email-detail.html',
   styleUrl: './component-email-detail.scss',
 })
@@ -15,8 +16,14 @@ export class ComponentEmailDetail implements onChangeEmailSelected {
 
 
   selectedEmail: BgMail | null = null;
+  showHtml: boolean = true;
+  showReponse :boolean=false;
 
   constructor(private gmailHelper: GisGmailServiceHelper, public changeDetectorRef: ChangeDetectorRef) { }
+
+  toggleBodyDisplay(): void {
+    this.showHtml = !this.showHtml;
+  }
 
   ngOnInit(): void {
     this.gmailHelper.addListenerOnChangeEmailSelected(this);
@@ -47,5 +54,11 @@ export class ComponentEmailDetail implements onChangeEmailSelected {
     console.log('Debug info : gmailHelper :',this.gmailHelper);
     console.log('Debug info : gmailHelper.selectedEmail :',this.gmailHelper.selectedEmail);
   }
+
+  repondre(email: BgMail) {
+    console.log('Répondre à l\'email :', email);
+   // this.gmailHelper.createReplyDraft(email);
+    this.showReponse=true;
+  } 
 
 }    

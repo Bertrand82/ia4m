@@ -129,6 +129,7 @@ export class GisGmailServiceHelper implements OnInit, onLabelsDownloaded {
       bgMessage.bodyHtml = this.getHtmlFromMessage(msgG, -1); // tronque à 3000 chars
       bgMessage.setFrom(this.extractHeader(msgG, 'From') || '');
       bgMessage.labelIds = msgG.labelIds;
+      bgMessage.date = this.extractHeader(msgG, 'Date') || '';
       bgMessage.isHtmlBodyUpdate();
       this.updateLabelsFromLabelIds(bgMessage);
     } catch (e) {

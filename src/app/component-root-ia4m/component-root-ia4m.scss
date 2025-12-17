@@ -128,23 +128,17 @@ $radius: 8px;
         font-weight: 600;
       }
 
-      .label-dot {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        margin-right: 8px;
-
-        &--blue {
-          background: #1a73e8;
-        }
-
-        &--green {
-          background: #34a853;
-        }
+     
+      .labelNew {
+       
+        font-size: 8px;       
+        border-radius: 5%;
+        margin-right: 6px;
+        margin-top: 4px;
       }
     }
   }
+
 
   .inbox {
     background: $surface;
@@ -354,4 +348,7 @@ $radius: 8px;
 
     
   }
+
+  
+ 
 }

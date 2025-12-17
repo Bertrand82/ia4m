@@ -6,6 +6,7 @@ import { BgMail, Email } from '../modeles/BgMail';
 import { Updatable } from '../services/UpDatable';
 import { ComponentListEmail } from '../component-list-email/component-list-email';
 import { ComponentEmailDetail } from '../component-email-detail/component-email-detail';  
+import { GmailLabel } from '../services/gis-gmail.service';
 
 @Component({
   selector: 'Ia4m',
@@ -20,6 +21,12 @@ export class Ia4m implements Updatable {
 
   showDetail:boolean=false;
   constructor(public gmailHelper: GisGmailServiceHelper,private changeDetectorRef: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.gmailHelper.deselectEmail();
+    this.processMessages();
+    
+  }
   
   updateView(): void {
    this.changeDetectorRef.detectChanges();
@@ -39,7 +46,7 @@ export class Ia4m implements Updatable {
 
   debug() {
     console.log('Debug info :');
-    this.gmailHelper.deselectEmail;
+    this.gmailHelper.deselectEmail();
     this.processMessages();
   }
  debug2() {
@@ -68,5 +75,9 @@ export class Ia4m implements Updatable {
   }
   showList_(){
     this.showDetail=false;
+  }
+
+  getLabels(): GmailLabel[] {
+    return this.gmailHelper.gmail.labelsGmail;
   }
 }

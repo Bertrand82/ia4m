@@ -1,8 +1,9 @@
+<div class="component-email-detail">
 @if (selectedEmail) {
   <div class="preview__header">
     <div class="email-header">
       <h3>Objet :{{ selectedEmail.subject || '(Sans objet)' }}</h3>
-      <div>id: {{selectedEmail.id}}</div>
+      
       @if(!selectedEmail.isConsistent()) {
         <div>id: {{selectedEmail.id}}</div>
       }
@@ -13,18 +14,27 @@
           }
           <span class="sender-name">{{ selectedEmail.from || 'Expéditeur inconnu' }}</span>
         </div>
-        <span class="time">{{ selectedEmail.time || selectedEmail.date }}</span>
+        <span class="time">{{ selectedEmail.date || 'No Time' }}</span>
       </div>
     </div>
   </div>
-  <div class="preview__content">
-    PouetAAA isHtml {{selectedEmail.isHtmlBody}}
-    @if (selectedEmail.isHtmlBody) {
+  @if(showReponse){
+    <div class="preview__response">
+      <h2>Réponse No Implemented Yet :</h2>
+      <email-response></email-response>
+    </div>  
+  }
+  <div class="preview__preview_mail_selected">
+    @if (selectedEmail.bodyHtml && selectedEmail.bodyTxt) {
+      <button class="toggle-view-btn" (click)="toggleBodyDisplay()">
+        {{ showHtml ? 'Afficher en texte brut' : 'Afficher en HTML' }}
+      </button>
+    }
+    <button (click)="repondre(selectedEmail)">Repondre</button>
+    @if (showHtml && selectedEmail.bodyHtml) {
       <div class="email-body" [innerHTML]="getSanitizedBodyHtml()"></div>
-    } @else if (selectedEmail.snippet) {
-      <div class="email-snippet">A13 {{ selectedEmail.snippet }}</div>
     } @else {
-      <p class="no-content">{{selectedEmail.bodyTxt || 'Aucun contenu disponible'   }}</p>
+      <pre class="email-body-text">{{ selectedEmail.bodyTxt || 'Aucun contenu disponible' }}</pre>
     }
      <h4>Analyse IA</h4>
     @if (selectedEmail.geminiResponse) {
@@ -38,12 +48,13 @@
         </div>  
     }
   </div>
+
 } @else {
   <div class="preview__header">
-    <h3>No Selected Email</h3>
-    
+    <h3>No Selected Email. Should never happen</h3>
   </div>
   <div class="preview__content">
     <p class="empty-state">Sélectionnez un message pour voir son contenu ici.</p>
   </div>
 }
+</div>

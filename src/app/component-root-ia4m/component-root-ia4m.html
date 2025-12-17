@@ -27,11 +27,12 @@
       </ul>
 
       <div class="labels">
-        <h4>Libellés</h4>
-        <ul>
-          <li><span class="label-dot label-dot--blue"></span> Projets</li>
-          <li><span class="label-dot label-dot--green"></span> Perso</li>
-        </ul>
+        <h4>Labels</h4>
+        
+          <div class="labelNew" *ngFor="let label of getLabels()">
+           {{ label.name }}
+          </div>
+       
       </div>
     </aside>
 

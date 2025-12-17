@@ -1,0 +1,39 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.component-email-detail {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.preview__header {
+  flex-shrink: 0;
+}
+
+.preview__preview_mail_selected {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px;
+  min-height: 0;
+  max-height: 50%;
+}
+
+.preview__content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.preview__response {
+  flex: 1;
+  overflow-y: auto;
+  border-top: 1px solid #e0e0e0;
+  padding: 16px;
+  min-height: 0;
+}
