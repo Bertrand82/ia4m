@@ -1,1 +1,23 @@
-<p>component-email-response works!</p>
+
+<div>
+
+<div>
+     <label for="name">Role</label>
+    <input id="Role"
+           type="text"
+           [(ngModel)]="role"
+           placeholder="Entrez un role"
+           maxlength="20" />
+    
+</div>
+<div>
+      <label for="lengthResponse">Longueur</label>
+      <input id="lengthResponse"
+           type="number"
+           inputmode="numeric"
+           [(ngModel)]="lengthResponse"           
+           placeholder="Longueur de la réponse"
+           min="50" max="1200" step="10" />
+</div>
+
+</div>

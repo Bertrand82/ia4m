@@ -2,26 +2,23 @@
 @if (selectedEmail) {
   <div class="preview__header">
     <div class="email-header">
-      <h3>Objet :{{ selectedEmail.subject || '(Sans objet)' }}</h3>
-      
+      <div>Objet :{{ selectedEmail.subject || '(Sans objet)' }}</div>      
       @if(!selectedEmail.isConsistent()) {
         <div>id: {{selectedEmail.id}}</div>
       }
       <div class="email-meta">
         <div class="sender">
-          @if (selectedEmail.fromInitial) {
-            <span class="avatar">{{ selectedEmail.fromInitial }}</span>
-          }
-          <span class="sender-name">{{ selectedEmail.from || 'Expéditeur inconnu' }}</span>
+          From:  <span class="avatar">{{ selectedEmail.fromShort || selectedEmail.from }}</span>         
         </div>
-        <span class="time">{{ selectedEmail.date || 'No Time' }}</span>
+        Date : <span class="time">{{ selectedEmail.date || 'No Time' }}</span>
       </div>
+      <div> {{ selectedEmail.snippet || '' }}</div>
     </div>
   </div>
   @if(showReponse){
     <div class="preview__response">
       <h2>Réponse No Implemented Yet :</h2>
-      <email-response></email-response>
+      <email-response [selectedEmail]="selectedEmail"></email-response>
     </div>  
   }
   <div class="preview__preview_mail_selected">
