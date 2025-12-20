@@ -1,0 +1,25 @@
+.divBg {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.label {
+  display: inline-block;
+  width: 120px;
+  margin-right: 1rem;
+  font-weight: 500;
+  color: #333;
+  flex-shrink: 0;
+}
+
+.inputBg {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  margin-top: 1rem;
+}

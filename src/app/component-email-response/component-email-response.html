@@ -2,8 +2,8 @@
 <div>
 
 <div>
-     <label for="name">Role</label>
-    <input id="Role"
+    <label class="label" for="name">Role</label>
+    <input class="inputBg" id="Role"
            type="text"
            [(ngModel)]="role"
            placeholder="Entrez un role"
@@ -11,13 +11,38 @@
     
 </div>
 <div>
-      <label for="lengthResponse">Longueur</label>
-      <input id="lengthResponse"
+      <label class="label" for="lengthResponse">Longueur</label>
+      <input class="inputBg" id="lengthResponse"
            type="number"
            inputmode="numeric"
            [(ngModel)]="lengthResponse"           
            placeholder="Longueur de la réponse"
            min="50" max="1200" step="10" />
 </div>
-
+<div>
+      <label class="label" for="myName">Signature</label>
+      <input class="inputBg" id="myName"
+           type="text"
+           [(ngModel)]="mySignature"           
+           placeholder="Mon Nom"
+           />
 </div>
+
+     <div>
+       <button (click)="generateEmailResponse()">
+         Interroger IA pour générer la réponse
+       </button>
+     </div>  
+     @if (selectedEmail) {
+       <div *ngIf="flagGeneratingResponse">Génération de la réponse en cours...</div>
+       <h3>Réponse Générée :</h3>
+       <div class="generated-response" *ngIf="flagGeneratedResponse">
+          <div>noReply:  {{ generatedResponse?.noReply }}</div>
+          <div>noReplyAdvice:  {{ generatedResponse?.noReplyAdvice }}</div>
+         <div>replyExpected:  {{ generatedResponse?.replyExpected  }}</div>
+         <div>conseil:  {{ generatedResponse?.advice }}</div>
+         <div>{{ generatedResponse?.responseShort }}</div>
+          <div>{{ generatedResponse?.responseLong  }}</div>
+       </div>
+     } 
+     </div> 

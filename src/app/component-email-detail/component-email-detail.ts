@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { onChangeEmailSelected } from '../services/UpDatable';
 import { BgMail, Email } from '../modeles/BgMail';
 import { GisGmailServiceHelper } from '../services/gis-gmail.service.helper';
@@ -8,7 +9,7 @@ import DOMPurify from 'dompurify';
 
 @Component({
   selector: 'email-detail',
-  imports: [ComponentEmailResponse],
+  imports: [ComponentEmailResponse, CommonModule],
   templateUrl: './component-email-detail.html',
   styleUrl: './component-email-detail.scss',
 })

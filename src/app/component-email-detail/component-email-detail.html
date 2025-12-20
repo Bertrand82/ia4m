@@ -2,6 +2,12 @@
 @if (selectedEmail) {
   <div class="preview__header">
     <div class="email-header">
+      <div>
+        
+        <span class="email-labels" *ngIf="selectedEmail.labelIds && selectedEmail.labelIds.length > 0">
+                <span class="label" *ngFor="let label of selectedEmail.labels">{{label }} </span>
+          </span>
+      </div>
       <div>Objet :{{ selectedEmail.subject || '(Sans objet)' }}</div>      
       @if(!selectedEmail.isConsistent()) {
         <div>id: {{selectedEmail.id}}</div>
@@ -19,7 +25,7 @@
     <div class="preview__response">
       <h2>Réponse No Implemented Yet :</h2>
       <email-response [selectedEmail]="selectedEmail"></email-response>
-    </div>  
+    </div>    
   }
   <div class="preview__preview_mail_selected">
     @if (selectedEmail.bodyHtml && selectedEmail.bodyTxt) {
