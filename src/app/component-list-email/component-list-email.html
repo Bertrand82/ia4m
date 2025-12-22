@@ -14,7 +14,7 @@
             <div class="avatar">{{ email.fromInitial }} 
              <button (click)="email.displayInGmailByMessageId(email.id)">Open</button> 
               <span class="email-labels" *ngIf="email.labelIds && email.labelIds.length > 0">
-                <span class="label" *ngFor="let label of email.labels">{{label }} </span>
+                <span class="labelBg" *ngFor="let label of email.labels">{{label }} </span>
               </span>
               
             </div>

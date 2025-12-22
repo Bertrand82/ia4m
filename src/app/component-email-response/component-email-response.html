@@ -3,6 +3,7 @@
 
 <div>
     <label class="label" for="name">Role</label>
+    
     <input class="inputBg" id="Role"
            type="text"
            [(ngModel)]="role"
@@ -37,12 +38,12 @@
        <div *ngIf="flagGeneratingResponse">Génération de la réponse en cours...</div>
        <h3>Réponse Générée :</h3>
        <div class="generated-response" *ngIf="flagGeneratedResponse">
-          <div>noReply:  {{ generatedResponse?.noReply }}</div>
-          <div>noReplyAdvice:  {{ generatedResponse?.noReplyAdvice }}</div>
-         <div>replyExpected:  {{ generatedResponse?.replyExpected  }}</div>
+          <div>Reponse :{{generatedResponse?.responseAdviceLevel  }}</div>
          <div>conseil:  {{ generatedResponse?.advice }}</div>
          <div>{{ generatedResponse?.responseShort }}</div>
+         @if (replyBoolean) {  
           <div>{{ generatedResponse?.responseLong  }}</div>
+         }
        </div>
      } 
      </div> 

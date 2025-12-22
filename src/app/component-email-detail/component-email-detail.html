@@ -3,9 +3,10 @@
   <div class="preview__header">
     <div class="email-header">
       <div>
-        
+        <button (click)="repondre(selectedEmail)">Repondre</button>
+   
         <span class="email-labels" *ngIf="selectedEmail.labelIds && selectedEmail.labelIds.length > 0">
-                <span class="label" *ngFor="let label of selectedEmail.labels">{{label }} </span>
+                <span class="labelBg" *ngFor="let label of selectedEmail.labels">{{label }} </span>
           </span>
       </div>
       <div>Objet :{{ selectedEmail.subject || '(Sans objet)' }}</div>      
@@ -33,7 +34,6 @@
         {{ showHtml ? 'Afficher en texte brut' : 'Afficher en HTML' }}
       </button>
     }
-    <button (click)="repondre(selectedEmail)">Repondre</button>
     @if (showHtml && selectedEmail.bodyHtml) {
       <div class="email-body" [innerHTML]="getSanitizedBodyHtml()"></div>
     } @else {

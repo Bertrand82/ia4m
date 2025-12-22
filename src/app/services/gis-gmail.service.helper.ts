@@ -487,6 +487,7 @@ export const reponseAnalyseGmail = {
           'newsletter',     // newsletter non personnelle
           'invoice',        // facture
           'meeting',        // invitation / réunion
+          'responseMandatory', // réponse obligatoire
           'other'           // autre / indéterminé
         ],
       },
