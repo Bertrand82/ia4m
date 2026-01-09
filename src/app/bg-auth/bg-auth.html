@@ -1,12 +1,12 @@
 <span *ngIf="authservice.currentUser() as user; else notConnected" style="border: 1px solid black;">
   Connecté en tant que {{ user?.email }}
-  <button class="buttonBg" (click)="onSettings()" class="nav-btn">
+  <button class="buttonBg nav-btn" (click)="onSettings()">
    <i class="fas fa-cog"></i>
 </button>
 </span>
 
 <ng-template #notConnected>
-  <button (click)="onConnectionRequest()" class="nav-btn primary">
-    <i class="fa-regular fa-user"></i> Connexion
+  <button class="buttonBg nav-btn primary" (click)="onConnectionRequest()">
+    Se connecter
   </button>
 </ng-template>

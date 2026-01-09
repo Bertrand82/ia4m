@@ -36,6 +36,7 @@ export class BgMail implements Email {
     selected = false;
     read?: boolean;
     fromParsedAdress: ParsedAddress | undefined;
+    checked: boolean = false;
     constructor(
         id: string,
         from?: string,

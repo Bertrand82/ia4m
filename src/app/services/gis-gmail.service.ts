@@ -8,6 +8,7 @@ import { BgMail } from '../modeles/BgMail';
 import { onLabelsDownloaded } from './UpDatable';
 @Injectable({ providedIn: 'root' })
 export class GisGmailService {
+
   
   private tokenClient: any = null;
   private accessToken: string | null = null;
@@ -154,8 +155,11 @@ export class GisGmailService {
     });
   }
 
-  /** Helper pour ajouter header Authorization et faire GET */
-
+  markAsDeleted(id: string) {
+    console.log('bg markAsDeleted called for message id :', id);
+    const url = `https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(id)}/trash`;
+    return this.post<any>(url); 
+  }
 
   private async get<T>(url: string, params?: HttpParams): Promise<T> {
     const token = await this.ensureAccessToken();

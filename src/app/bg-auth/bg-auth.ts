@@ -28,4 +28,6 @@ export class BgAuth {
       data: 'aaa',
     });
   }
+
+  
 }

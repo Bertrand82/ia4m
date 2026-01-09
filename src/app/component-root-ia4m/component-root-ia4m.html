@@ -4,7 +4,6 @@
       <div class="brand">ia4mail</div>
       <nav class="top-nav">
         <a class="top-nav__link" href="#">Aide</a>
-        <a class="top-nav__link button button--outline" href="#">Se connecter</a>
         <app-bg-auth></app-bg-auth>
       </nav>
     </div>
@@ -13,8 +12,9 @@
   <div class="app" id="inbox">
     <aside class="sidebar">
       <button class="compose">Nouveau message</button>
-      <button class="compose"  (click)="debug()">Debug</button>
+      <button class="compose"  (click)="processMessagesToDay()">Messages Today</button>
       <button class="compose"  (click)="debug2()">Debug2  </button>
+      <button class="compose"  (click)="processNoReadMessages()">No Read Messages </button>
     
       
 
@@ -53,7 +53,7 @@
     <aside class="inbox" *ngIf="showDetail">
      
       <div class="preview__header">
-        <button class="icon-btn" type="button" (click)="deselectEmail()" title="Fermer">deselectEmail</button>
+        
         <email-detail></email-detail>
         </div>
     </aside>

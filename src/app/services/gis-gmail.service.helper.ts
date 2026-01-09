@@ -9,17 +9,18 @@ import { ComponentEmailDetail } from '../component-email-detail/component-email-
   providedIn: 'root',
 })
 export class GisGmailServiceHelper implements OnInit, onLabelsDownloaded {
+ 
 
 
 
   listenerOnChangeEmailSelected: onChangeEmailSelected | undefined;
 
   addListenerOnChangeEmailSelected(listener: onChangeEmailSelected): void {
-   this.listenerOnChangeEmailSelected =listener;
+    this.listenerOnChangeEmailSelected = listener;
 
   }
 
-  private   messages2: Array<BgMail> = [];
+  private messages2: Array<BgMail> = [];
 
   profile: any = null;
   updatable: Updatable | null = null;
@@ -37,7 +38,7 @@ export class GisGmailServiceHelper implements OnInit, onLabelsDownloaded {
 
   public getMessages(): Array<BgMail> {
     return this.messages2;
-  } 
+  }
 
   ngOnInit(): void {
     this.gmail.isSignedIn$.subscribe((s) => {
@@ -57,14 +58,19 @@ export class GisGmailServiceHelper implements OnInit, onLabelsDownloaded {
 
     this.selectedEmail = email;
     this.listenerOnChangeEmailSelected?.onChangeEmailSelected(email);
-     this.updatable?.updateView();
+    this.updatable?.updateView();
   }
 
   deselectEmail() {
-   
-     this.listenerOnChangeEmailSelected?.onChangeEmailSelected(null);
-      this.selectedEmail = null;
+
+    this.listenerOnChangeEmailSelected?.onChangeEmailSelected(null);
+    this.selectedEmail = null;
     this.updatable?.updateView();
+  }
+
+   markAsDeleted(email: BgMail) {
+    console.log('bg markAsDeleted called for email id :', email.id);
+    this.gmail.markAsDeleted(email.id);
   }
 
   onSignIn() {
@@ -78,9 +84,17 @@ export class GisGmailServiceHelper implements OnInit, onLabelsDownloaded {
     this.gmail.signOut().catch((err) => console.error(err));
   }
 
-  processMessages(updatable: Updatable) {
+  processMessagesToDay(updatable: Updatable) {
     this.updatable = updatable;
     const messagesToday = this.loadMessagesToday();
+    messagesToday.forEach((m) => {
+      this.fetchMessageAndProcess(m.id);
+    });
+  }
+
+  processNoReadMessages(updatable: Updatable) {
+    this.updatable = updatable;
+    const messagesToday = this.loadNoReadMessages();
     messagesToday.forEach((m) => {
       this.fetchMessageAndProcess(m.id);
     });
@@ -147,25 +161,25 @@ export class GisGmailServiceHelper implements OnInit, onLabelsDownloaded {
       return;
     }
     this.getMessages()[index] = bgMessage;
-    console.log('bg AA1 processMessageDetails index zz' + index+'z', ' msgG.id:', msgG.id, ' message=', bgMessage);
-    console.log('bg AA2 processMessageDetails index zz' + index+'z', ' isConsistent  :', isConsistant(bgMessage));
+    console.log('bg AA1 processMessageDetails index zz' + index + 'z', ' msgG.id:', msgG.id, ' message=', bgMessage);
+    console.log('bg AA2 processMessageDetails index zz' + index + 'z', ' isConsistent  :', isConsistant(bgMessage));
     console.log('bg AA3 zz' + index + "z  " + msgG.id);
     // build prompt
     if (isConsistant(bgMessage)) {
       console.log('bg C processMessageDetails message is consistant id=', bgMessage.id, "message:", bgMessage);
       if (index !== -1) {
         this.getMessages()[index] = bgMessage;
-      } 
-      console.log('bg AA1bis processMessageDetails index zz' + index+'z', ' msgG.id:', msgG.id, ' messag[index]=', this.messages2[index]  );
-    
-     } else {
+      }
+      console.log('bg AA1bis processMessageDetails index zz' + index + 'z', ' msgG.id:', msgG.id, ' messag[index]=', this.messages2[index]);
+
+    } else {
       console.error('bg C bg Message non consistent, skipping Gemini analysis id=', bgMessage, "  zz" + index);
       return;
     }
     console.log('bg AA4 zz' + index + "z  " + msgG.id);
     this.processMessageDetailsByGemini2(bgMessage);
     console.log('bg AA5 zz' + index + "z  " + msgG.id);
-   
+
   }
 
   processMessageDetailsByGemini2(bgMessage: BgMail): any {
@@ -315,7 +329,7 @@ export class GisGmailServiceHelper implements OnInit, onLabelsDownloaded {
     return text ? text.slice(0, maxLen) : '';
   }
 
-   private getHtmlFromMessage(msg: any, maxLen = 8000): string {
+  private getHtmlFromMessage(msg: any, maxLen = 8000): string {
     // try to extract text/plain parts, fallback to stripping HTML
     const payload = msg.payload;
     let text = '';
@@ -334,7 +348,7 @@ export class GisGmailServiceHelper implements OnInit, onLabelsDownloaded {
     traverse(payload);
     if (maxLen < 0) {
       return text;
-    } 
+    }
     return text ? text.slice(0, maxLen) : '';
   }
 
@@ -373,7 +387,8 @@ ${body}
     return template;
   }
 
-  loadMessagesToday() {
+
+  loadMessagesToday(): BgMail[] {
     const now = new Date();
     // début de la journée locale
     const startOfDay = new Date(
@@ -393,10 +408,22 @@ ${body}
     const endSeconds = Math.floor(startOfNextDay.getTime() / 1000);
 
     const q = `after:${startSeconds} before:${endSeconds}`;
+    return this.loadMessages(q);
+  }
+
+  loadNoReadMessages(): BgMail[] {
+    
+    const q  = 'is:unread';
+    return this.loadMessages(q);
+  }
+
+
+
+  loadMessages(query: string, max: number = 200): BgMail[] {
 
     // demande au service en lui passant la query
     this.gmail
-      .listMessages(100, q)
+      .listMessages(max, query)
       .then((res) => {
         const msgs = res.messages || [];
         msgs.forEach((m: any) => {
@@ -411,18 +438,20 @@ ${body}
 
 
 
+
+
   mergeMessage(msgG0: BgMail): void {
-    const index = this.getMessages().findIndex((m) => m.id === msgG0.id);   
+    const index = this.getMessages().findIndex((m) => m.id === msgG0.id);
     if (index !== -1) {
-       const msgG1 = this.getMessages()[index] ;
-       msgG1.merge(msgG0);
+      const msgG1 = this.getMessages()[index];
+      msgG1.merge(msgG0);
     } else {
       this.getMessages().push(msgG0);
-    }   
+    }
   }
 }
 
-  
+
 
 
 
@@ -437,41 +466,41 @@ export const reponseAnalyseGmail = {
     company: {
       type: 'string',
       maxLength: 80,
-      description: 'nom de la société',
+      description: 'company name',
     },
     position: {
       type: 'string',
       maxLength: 80,
-      description: 'intitulé du poste',
+      description: 'job title',
     },
-    salary: { type: 'string', maxLength: 80, description: 'salaire proposé' },
-    location: { type: 'string', maxLength: 80, description: 'lieu du poste' },
+    salary: { type: 'string', maxLength: 80, description: 'offered salary' },
+    location: { type: 'string', maxLength: 80, description: 'job location' },
     contact: {
       type: 'string',
-      description: 'personne à contacter',
+      description: 'contact person',
     },
     applyLink: {
       type: 'string',
       maxLength: 200,
-      description: 'lien pour postuler',
+      description: 'application link',
     },
     offerDate: {
       type: 'string',
       format: 'date-time',
-      description: "date de l'offre",
+      description: 'offer date',
     },
     extraNotes: {
       type: 'string',
       maxLength: 300,
-      description: 'notes supplémentaires',
+      description: 'additional notes',
     },
     confidence: {
       type: 'number',
-      description: "niveau de confiance de l'analyse (0 à 1)",
+      description: 'confidence level of the analysis (0 to 1)',
     },
     nbOffresEmplois: {
       type: 'number',
-      description: "nombre d'offres d'emplois détectées dans le mail (0 si aucune)",
+      description: 'number of job offers detected in the email (0 if none)',
     },
     // Nouveau champ "label" : une seule valeur choisie parmi une énumération de labels
     labels: {
@@ -492,7 +521,7 @@ export const reponseAnalyseGmail = {
         ],
       },
       description:
-        "Catégories du mail. Utiliser un tableau de valeurs parmi l'énumération (jobOffer, jobOffers, advertisement, contactRequest, bank, newsletter, invoice, meeting, other).",
+        'Email categories. MUST use ONLY values from this exact enum list: jobOffer, jobOffers, advertisement, contactRequest, bank, newsletter, invoice, meeting, responseMandatory, other. No other values are allowed.',
       minItems: 1
 
     },

@@ -1,37 +1,50 @@
+<div>
+  <input type="checkbox" #bgCheckBoxGeneral
+    (change)="checkboxState = $any($event.target).checked ?  'checked' : 'unchecked'; updateCheckboxGeneralState()">
+  
 
-
-
-      <ul class="email-list" role="list">
-        <li
-          class="email-item"
-          *ngFor="let email of getEmails()"
-          [class.unread]="!email.read"
-          (click)="select(email)"
-          role="listitem"
-          [attr.aria-selected]="getSelectedEmail() === email"
-        >
-          <div class="email-left">
-            <div class="avatar">{{ email.fromInitial }} 
-             <button (click)="email.displayInGmailByMessageId(email.id)">Open</button> 
-              <span class="email-labels" *ngIf="email.labelIds && email.labelIds.length > 0">
-                <span class="labelBg" *ngFor="let label of email.labels">{{label }} </span>
-              </span>
-              
-            </div>
-          </div>
-          <div class="email-body">
-            <div class="email-top">
-              <span class="sender" [title]="email.fromParsedAdress?.email">{{ email.fromParsedAdress?.name }}</span>
-              <span class="time">{{ email.time }}</span>
-            </div>
-
-            <div class="email-subject">{{ email.subject }}</div>          
-            <div class="email-snippet" [innerHTML]="email.snippet"></div>
-           
-          
-          </div>
-        </li>
-      </ul>
  
+    @if (checkboxState === 'indeterminate') {
+      Select mails to process
+    } @else { 
+     
+      <button (click)="markSelectedEmailsAsDeleted()">Delete Selected Emails</button>
+     <button (click)="markSelectedEmailsAsRead()">Mark as Read</button>
+     <button (click)="markSelectedEmailsAsUnRead()">Mark as Unread</button>
+    }
 
-   
+ 
+  @if (false) {
+  <div>
+    <button (click)="setCheckBoxGeneralStateIndeterminate()">Indéterminé</button>
+  </div>
+  }
+
+</div>
+<ul class="email-list" role="list">
+  <li class="email-item" *ngFor="let email of getEmails()" [class.unread]="!email.read" (click)="select(email)"
+    role="listitem" [attr.aria-selected]="getSelectedEmail() === email">
+    <div class="email-left">
+      <div class="avatar">{{ email.fromInitial }}
+        <input type="checkbox" (click)="$event.stopPropagation();setCheckBoxGeneralStateIndeterminate()"
+          [(ngModel)]="email.checked" />
+        <button (click)="email.displayInGmailByMessageId(email.id)">Open</button>
+        <span class="email-labels" *ngIf="email.labelIds && email.labelIds.length > 0">
+          <span class="labelBg" *ngFor="let label of email.labels">{{label }} </span>
+        </span>
+
+      </div>
+    </div>
+    <div class="email-body">
+      <div class="email-top">
+        <span class="sender" [title]="email.fromParsedAdress?.email">{{ email.fromParsedAdress?.name }}</span>
+        <span class="time">{{ email.time }}</span>
+      </div>
+
+      <div class="email-subject">{{ email.subject }}</div>
+      <div class="email-snippet" [innerHTML]="email.snippet"></div>
+
+
+    </div>
+  </li>
+</ul>

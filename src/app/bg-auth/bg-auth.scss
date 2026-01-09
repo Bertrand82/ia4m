@@ -1,4 +1,4 @@
-.buttonBg   {
+.buttonBg_old   {
     background-color: red;
     border: solid 1px black;
     cursor: pointer;
@@ -6,3 +6,12 @@
     padding: 0;
     margin: 0 5px;
 }   
+
+.buttonBg{
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-weight: 600;
+        background: transparent;
+        border:1px solid rgba(255, 255, 255, 0.18);
+        color: white;
+      }

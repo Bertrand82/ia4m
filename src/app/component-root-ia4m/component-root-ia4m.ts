@@ -24,7 +24,7 @@ export class Ia4m implements Updatable {
 
   ngOnInit(): void {
     this.gmailHelper.deselectEmail();
-    this.processMessages();
+    this.processMessagesToDay();
     
   }
   
@@ -44,19 +44,24 @@ export class Ia4m implements Updatable {
     email.read = true;
   }
 
-  debug() {
+  debug_() {
     console.log('Debug info :');
     this.gmailHelper.deselectEmail();
-    this.processMessages();
+    this.processMessagesToDay();
+  }
+  processNoReadMessages() {
+    console.log('Debug info :');
+    this.gmailHelper.deselectEmail();
+    this.gmailHelper.processNoReadMessages(this);
   }
  debug2() {
     console.log('Debug2 info listMessages :', this.gmailHelper.getMessages());
     console.log('Debug2 info showDetail :', this.showDetail);
     
   }
-  processMessages() {
+  processMessagesToDay() {
     console.log('Traitement des messages...');
-    this.gmailHelper.processMessages(this);
+    this.gmailHelper.processMessagesToDay(this);
   } 
 
   getEmails(): BgMail[] {

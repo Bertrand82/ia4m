@@ -16,6 +16,8 @@ import DOMPurify from 'dompurify';
 export class ComponentEmailDetail implements onChangeEmailSelected {
 
 
+
+
   selectedEmail: BgMail | null = null;
   showHtml: boolean = true;
   showReponse :boolean=false;
@@ -61,5 +63,10 @@ export class ComponentEmailDetail implements onChangeEmailSelected {
    // this.gmailHelper.createReplyDraft(email);
     this.showReponse=true;
   } 
+
+  deselectEmail() {
+    this.gmailHelper.deselectEmail();
+}
+
 
 }    

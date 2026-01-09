@@ -3,6 +3,9 @@
   <div class="preview__header">
     <div class="email-header">
       <div>
+        <button class="icon-btn" type="button" (click)="deselectEmail()" title="Liste">deselectEmail</button>
+         <button (click)="selectedEmail.displayInGmailByMessageId(selectedEmail.id)">Open</button> 
+            
         <button (click)="repondre(selectedEmail)">Repondre</button>
    
         <span class="email-labels" *ngIf="selectedEmail.labelIds && selectedEmail.labelIds.length > 0">
